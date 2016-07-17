@@ -1,0 +1,80 @@
+<html>
+<head>
+<title>Animation Example</title>
+<style type="text/css">
+	.abs {position: absolute;}
+</style>
+<script language=javascript type="text/javascript">
+var ang = [0, 360, 0];
+var dir = [-1, 1, -1];
+var v = [0.5, 0.5, 0.5];
+var t;
+window.onload = function () {
+	var u = []; var g = [];
+	u[0] = document.getElementById("imye");
+	u[1] = document.getElementById("impr");
+	u[2] = document.getElementById("imrd");
+	g[0] = document.getElementById("yg"); 
+	g[1] = document.getElementById("pg");
+	g[2] = document.getElementById("rg"); 
+	u[0].onclick = function (){dir[0] = -dir[0];}
+	u[0].ondblclick = function (){v[0] = v[0] + 1;}
+	u[0].style.zIndex = 10;
+	u[1].onclick = function (){dir[1] = -dir[1];}
+	u[1].ondblclick = function (){v[1] = v[1] + 1;}
+	u[1].style.zIndex = 20;
+	u[2].onclick = function (){dir[2] = -dir[2];}
+	u[2].ondblclick = function (){v[2] = v[2] + 1;}
+	u[2].style.zIndex = 22;
+	var bi = document.getElementById("bgimg");
+	bi.style.left = (this.outerWidth - bi.width)/2;
+	bi.style.top = (this.innerHeight - bi.height)/2;
+	for (var i = 0; i < 3; i++)
+	{
+		setPos(u[i], bi); setPos(g[i], bi);
+		g[i].width = u[i].width + 20; g[i].height = u[i].height + 20; 
+	}
+	function setPos(y, bi){
+		y.style.left = parseInt(bi.style.left) + bi.width - y.width/2; 
+		y.style.top = parseInt(bi.style.top) + bi.height/2 - y.height/2; 
+	}
+	t = setInterval(function(){Start()}, 25);
+	function Start(){
+		for (var j = 0; j < 3; j++)
+			ang[j] = CircleMove(u[j], g[j], dir[j], v[j], ang[j]);
+	}
+	function CircleMove(el, gr, dir, speed, ang) {
+		var b = document.getElementById("bgimg");
+		var cx = parseInt(b.style.left) + b.width/2;
+		var cy = parseInt(b.style.top) + b.height/2;
+		var d = b.width/2;
+		ang = ang + dir*speed;
+		var newsin = Math.sin(toRad(ang));
+		var ver = (ang <= 180 ? 1 : -1) * Math.abs(d * newsin);
+		var hos = (ang >= 90 && ang < 270 ? 1 : -1) * Math.sqrt(d*d - ver*ver);
+		el.style.left = (cx - hos - el.width/2) + 'px';
+		el.style.top = (cy - ver - el.height/2) + 'px';
+		gr.style.left = (cx - hos - gr.width/2) + 'px';
+		gr.style.top = (cy - ver - gr.height/2) + 'px';
+		return (ang >= 360 && dir == 1 ? 0 : (ang <= 2 && dir == -1 ? 360 : ang));
+	}
+}
+function toRad(x){
+  	return (x * Math.PI/180);
+}
+window.onunload=new Function("clearTimeout(t);");
+</script>
+</head>
+
+<body>
+<img id="bgimg" class="abs" src="ex.png" >
+<img id="yg" class="abs" src="blue.png" >
+<img id="pg" class="abs" src="blue.png" >
+<img id="rg" class="abs" src="blue.png" >
+<img id="imrd" class="abs" src="redcsq.png" >
+<img id="imye" class="abs" src="yellowc.png" >
+<img id="impr" class="abs" src="purplec.png" >
+</form>
+
+</body>
+</html>
